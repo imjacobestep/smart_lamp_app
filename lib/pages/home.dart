@@ -215,46 +215,76 @@ class HomeState extends State<Home>{
     }
   }
 
-  @override
-  Widget build(BuildContext context){
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: const Text("Hi, User!"),
-        leading: const Padding(
-          padding: EdgeInsets.all(10),
-          child: CircleAvatar(
-            radius: 40,
-          ),
+  PreferredSizeWidget appBar(){
+    return AppBar(
+      centerTitle: true,
+      title: const Text("Hi, User!"),
+      leading: const Padding(
+        padding: EdgeInsets.all(10),
+        child: CircleAvatar(
+          radius: 40,
+          backgroundImage: AssetImage("assets/user_pic.jpg"),
         ),
       ),
-      body: getView(_selectedIndex),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){},
-        tooltip: 'Increment',
-        child: const Icon(Icons.add_sharp),
-      ),
-      bottomNavigationBar: NavigationBar(
-        destinations: const [
-          NavigationDestination(
-              icon: Icon(Icons.home_sharp),
-              label: "home"
-          ),
-          NavigationDestination(
-              icon: Icon(Icons.history_sharp),
-              label: "learned"
-          ),
-          NavigationDestination(
-              icon: Icon(Icons.light_sharp),
-              label: "lighting"
-          ),
-        ],
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: _onItemTapped,
-      ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context){
+    if(MediaQuery.of(context).size.width >= 600){
+      return Scaffold(
+        appBar: appBar(),
+        body: Row(
+          children: [
+            NavigationRail(
+              extended: MediaQuery.of(context).size.width >= 800,
+              minExtendedWidth: 180,
+              destinations: const [
+                NavigationRailDestination(
+                    icon: Icon(Icons.home_sharp),
+                    label: Text("home")
+                ),
+                NavigationRailDestination(
+                    icon: Icon(Icons.history_sharp),
+                    label: Text("learned")
+                ),
+                NavigationRailDestination(
+                    icon: Icon(Icons.light_sharp),
+                    label: Text("lighting")
+                ),
+              ],
+              selectedIndex: _selectedIndex,
+              onDestinationSelected: _onItemTapped,
+            ),
+            Expanded(child: getView(_selectedIndex),),
+          ],
+        ),
+      );
+    }else{
+      return Scaffold(
+          appBar: appBar(),
+          //body: getView(_selectedIndex),
+          body: getView(_selectedIndex),
+          bottomNavigationBar: NavigationBar(
+            destinations: const [
+              NavigationDestination(
+                  icon: Icon(Icons.home_sharp),
+                  label: "home"
+              ),
+              NavigationDestination(
+                  icon: Icon(Icons.history_sharp),
+                  label: "learned"
+              ),
+              NavigationDestination(
+                  icon: Icon(Icons.light_sharp),
+                  label: "lighting"
+              ),
+            ],
+            selectedIndex: _selectedIndex,
+            onDestinationSelected: _onItemTapped,
+          )
+      );
+    }
   }
 
 }

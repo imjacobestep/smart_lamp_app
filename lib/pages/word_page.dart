@@ -30,19 +30,22 @@ class WordPageState extends State<WordPage>{
     return Column(
 
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              word,
-              style: Theme.of(context).textTheme.displaySmall,
-            ),
-            OutlinedButton(
-              onPressed: () {},
-              style: Theme.of(context).outlinedButtonTheme.style,
-              child: const Icon(Icons.volume_up_sharp),
-            )
-          ],
+        Padding(
+            padding: EdgeInsets.all(20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                word,
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+              OutlinedButton(
+                onPressed: () {},
+                style: Theme.of(context).outlinedButtonTheme.style,
+                child: const Icon(Icons.volume_up_sharp),
+              )
+            ],
+          ),
         ),// word header
         const SizedBox(height: 20,),
         Card(
@@ -53,9 +56,9 @@ class WordPageState extends State<WordPage>{
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text("definition", style: Theme.of(context).textTheme.headlineSmall,),
+                Text("definition", style: Theme.of(context).textTheme.labelMedium,),
                 const SizedBox(height: 8,),
-                Text("This is the definition of the word.", style: Theme.of(context).textTheme.bodyMedium,),
+                Text("This is the definition of the word.", style: Theme.of(context).textTheme.headlineSmall,),
               ],
             ),//definition,
           ),
@@ -69,9 +72,9 @@ class WordPageState extends State<WordPage>{
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text("used in a sentence", style: Theme.of(context).textTheme.headlineSmall,),
+                Text("used in a sentence", style: Theme.of(context).textTheme.labelMedium,),
                 const SizedBox(height: 8,),
-                Text("This is the word used in a sentence that helps contextualize it.", style: Theme.of(context).textTheme.bodyMedium,),
+                Text("This is the word used in a sentence that helps contextualize it.", style: Theme.of(context).textTheme.headlineSmall,),
               ],
             ),//sentence
           ),

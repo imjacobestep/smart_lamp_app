@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "324194100549",
+    "project_id": "smart-study-lamp",
+    "storage_bucket": "smart-study-lamp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:324194100549:android:90aac966f8cb2f0f4d0a2c",
+        "android_client_info": {
+          "package_name": "com.example.smart_lamp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "324194100549-7nfecihjt60cinqceg664sjmrqju39ai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTM94g7GdE6uX3wStLSUYcs2p7GSwcSjg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "324194100549-7nfecihjt60cinqceg664sjmrqju39ai.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_lamp/main.dart';
 import 'package:smart_lamp/pages/home.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class WordPage extends StatefulWidget{
 
@@ -9,6 +10,7 @@ class WordPage extends StatefulWidget{
 
   String word;
   bool isLearned;
+  final flutterTts = FlutterTts();
 
   WordPage({required this.word, required this.isLearned});
 
@@ -22,9 +24,11 @@ class WordPageState extends State<WordPage>{
     super.initState();
   }
 
+
+
   Widget wordPage(String word, bool isLearned){
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
+
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -34,36 +38,71 @@ class WordPageState extends State<WordPage>{
               style: Theme.of(context).textTheme.displaySmall,
             ),
             OutlinedButton(
-              onPressed: (){},
-              child: Icon(Icons.volume_up_sharp),
+              onPressed: () {},
               style: Theme.of(context).outlinedButtonTheme.style,
+              child: const Icon(Icons.volume_up_sharp),
             )
           ],
         ),// word header
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text("definition", style: Theme.of(context).textTheme.headlineSmall,),
-            Text("This is the definition of the word.", style: Theme.of(context).textTheme.bodyMedium,)
-          ],
-        ),//definition
-        Column(
-        ),//sentence
+        const SizedBox(height: 20,),
+        Card(
+          elevation: 0,
+          color: Theme.of(context).colorScheme.surfaceVariant,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text("definition", style: Theme.of(context).textTheme.headlineSmall,),
+                const SizedBox(height: 8,),
+                Text("This is the definition of the word.", style: Theme.of(context).textTheme.bodyMedium,),
+              ],
+            ),//definition,
+          ),
+        ),
+        const SizedBox(height: 20,),
+        Card(
+          elevation: 0,
+          color: Theme.of(context).colorScheme.surfaceVariant,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text("used in a sentence", style: Theme.of(context).textTheme.headlineSmall,),
+                const SizedBox(height: 8,),
+                Text("This is the word used in a sentence that helps contextualize it.", style: Theme.of(context).textTheme.bodyMedium,),
+              ],
+            ),//sentence
+          ),
+        ),
       ],
     );
+  }
+
+  Widget getFab(bool isLearned){
+    if(!isLearned){
+      return FloatingActionButton.extended(
+        onPressed: (){},
+        tooltip: 'learned',
+        label: const Text('learned'),
+        icon: const Icon(Icons.done),
+      );
+    }else return const SizedBox();
   }
 
   @override
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text("Details"),
-        leading: Padding(
-          padding: const EdgeInsets.all(5),
+        title: const Text("Details"),
+        leading: const Padding(
+          padding: EdgeInsets.all(10),
           child: CircleAvatar(
-            radius: 40,
+            radius: 30,
           ),
         ),
       ),
@@ -71,11 +110,8 @@ class WordPageState extends State<WordPage>{
         padding: const EdgeInsets.all(20),
         child: wordPage(widget.word, widget.isLearned),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){},
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: getFab(widget.isLearned)
     );
   }
 

@@ -1,6 +1,5 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
+import 'package:smart_lamp/pages/home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,7 +25,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: Home(),
     );
   }
 }
@@ -125,20 +124,25 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
-        leading: CircleAvatar(),
+        leading: Padding(
+          padding: const EdgeInsets.all(5),
+          child: CircleAvatar(
+            radius: 40,
+          ),
+        ),
       ),
-      /*body: ListView.separated(
+      body: ListView.separated(
           padding: const EdgeInsets.all(20),
           itemBuilder: (BuildContext context, int index){
             return wordListing(words[index], false);
           },
           separatorBuilder: (BuildContext context, int index) => const Divider(),
           itemCount: words.length
-      ),*/
-      body: Padding(
+      ),
+      /*body: Padding(
         padding: const EdgeInsets.all(20),
         child: wordPage(words[0], false),
-      ),
+      ),*/
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',

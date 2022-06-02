@@ -13,7 +13,7 @@ class Home extends StatefulWidget{
 
 class HomeState extends State<Home>{
   //vars
-  List<String> words = ["apple", "banana", "car", "duck"];
+  List<String> titles = ["New Words", "Learned Words", "Lighting"];
   int _selectedIndex = 0;
   final Stream<QuerySnapshot> wordStream = FirebaseFirestore.instance.collection('words').snapshots();
   final Stream<QuerySnapshot> luxStream = FirebaseFirestore.instance.collection('environment').snapshots();
@@ -149,7 +149,7 @@ class HomeState extends State<Home>{
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                   const SizedBox(width: 8,),
-                  const Icon(Icons.done_sharp),
+                  Icon(Icons.done_sharp, color: Theme.of(context).colorScheme.primary,),
                 ],
               ),
               IconButton(
@@ -169,14 +169,14 @@ class HomeState extends State<Home>{
     if(meetsTarget){
       return Card(
           elevation: 0,
-          color: Theme.of(context).colorScheme.surfaceVariant,
+          color: Theme.of(context).colorScheme.primaryContainer.withAlpha(50),
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(reading.toString(), style: Theme.of(context).textTheme.headlineSmall,),
-                const SizedBox(width: 8,),
-                const Icon(Icons.flashlight_on_sharp)
+                Text("ideal", style: TextStyle(color: Theme.of(context).colorScheme.primary),),
               ],
             )
           )
@@ -184,14 +184,14 @@ class HomeState extends State<Home>{
     }else{
       return Card(
           elevation: 0,
-          color: Theme.of(context).colorScheme.surfaceVariant,
+          color: Theme.of(context).colorScheme.errorContainer.withAlpha(50),
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(reading.toString(), style: Theme.of(context).textTheme.headlineSmall,),
-                const SizedBox(width: 8,),
-                const Icon(Icons.flashlight_off_sharp)
+                Text("too dim", style: TextStyle(color: Theme.of(context).colorScheme.error),),
               ],
             ),
           )
@@ -218,7 +218,7 @@ class HomeState extends State<Home>{
   PreferredSizeWidget appBar(){
     return AppBar(
       centerTitle: true,
-      title: const Text("Hi, User!"),
+      title: Text(titles[_selectedIndex]),
       leading: const Padding(
         padding: EdgeInsets.all(10),
         child: CircleAvatar(

@@ -106,6 +106,8 @@ class WordPageState extends State<WordPage>{
           padding: EdgeInsets.all(10),
           child: CircleAvatar(
             radius: 30,
+            backgroundColor: Colors.transparent,
+            //backgroundImage: AssetImage("assets/user_pic.jpg"),
           ),
         ),
       ),

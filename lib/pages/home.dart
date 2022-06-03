@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_lamp/main.dart';
 import 'package:smart_lamp/pages/word_page.dart';
 
 
@@ -68,8 +67,9 @@ class HomeState extends State<Home>{
           itemBuilder: (context, index){
             var word = data.docs[index]['word'];
             var isLearned = data.docs[index]['learned'];
+            var docID = data.docs[index].id;
             if(isLearned == true) {
-              return learnedWord(word, isLearned);
+              return learnedWord(word, isLearned, docID);
             }else{
               return const SizedBox();
             }
@@ -95,9 +95,9 @@ class HomeState extends State<Home>{
           itemBuilder: (context, index){
           var word = data.docs[index]['word'];
           var isLearned = data.docs[index]['learned'];
-          //return Text(data.docs[index]['word']);
+          var docID = data.docs[index].id;
             if(isLearned == false) {
-              return wordListing(word, isLearned);
+              return wordListing(word, isLearned, docID);
             }else{
               return const SizedBox();
             }
@@ -107,7 +107,7 @@ class HomeState extends State<Home>{
     );
   }
 
-  Widget wordListing(String word, bool isLearned){
+  Widget wordListing(String word, bool isLearned, String docID){
     return Card(
       elevation: 0,
       color: Theme.of(context).colorScheme.surfaceVariant,
@@ -122,7 +122,7 @@ class HomeState extends State<Home>{
             ),
             IconButton(
               onPressed: (){
-                toDetails(word, isLearned);
+                toDetails(word, isLearned, docID);
               },
               icon: const Icon(Icons.chevron_right_sharp),
               iconSize: 32,
@@ -133,7 +133,7 @@ class HomeState extends State<Home>{
     );
   }
 
-  Widget learnedWord(String word, bool isLearned){
+  Widget learnedWord(String word, bool isLearned, String docID){
     return Card(
         elevation: 0,
         color: Theme.of(context).colorScheme.surfaceVariant,
@@ -154,7 +154,7 @@ class HomeState extends State<Home>{
               ),
               IconButton(
                 onPressed: (){
-                  toDetails(word, isLearned);
+                  toDetails(word, isLearned, docID);
                 },
                 icon: const Icon(Icons.chevron_right_sharp),
                 iconSize: 32,
@@ -199,9 +199,9 @@ class HomeState extends State<Home>{
     }
   }
 
-  void toDetails(String word, bool isLearned){
+  void toDetails(String word, bool isLearned, String docID){
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => WordPage(word: word, isLearned: isLearned,))
+        MaterialPageRoute(builder: (context) => WordPage(word: word, isLearned: isLearned, docID: docID,))
     );
   }
 

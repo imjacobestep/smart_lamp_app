@@ -1,7 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_lamp/main.dart';
-import 'package:smart_lamp/pages/home.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 
 class WordPage extends StatefulWidget{
 
@@ -10,9 +8,9 @@ class WordPage extends StatefulWidget{
 
   String word;
   bool isLearned;
-  final flutterTts = FlutterTts();
+  String docID;
 
-  WordPage({required this.word, required this.isLearned});
+  WordPage({required this.word, required this.isLearned, required this.docID});
 
 }
 
@@ -86,7 +84,12 @@ class WordPageState extends State<WordPage>{
   Widget getFab(bool isLearned){
     if(!isLearned){
       return FloatingActionButton.extended(
-        onPressed: (){},
+        onPressed: (){
+          DocumentReference docRef = FirebaseFirestore.instance.collection("words").doc(widget.docID);
+          var updateInfo = {'learned':true};
+          docRef.update(updateInfo);
+          Navigator.pop(context);
+        },
         tooltip: 'learned',
         label: const Text('learned'),
         icon: const Icon(Icons.done),

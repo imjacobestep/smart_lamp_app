@@ -42,7 +42,7 @@ class HomeState extends State<Home>{
           padding: const EdgeInsets.all(20),
           itemCount: data.size,
           itemBuilder: (context, index){
-            var reading = data.docs[index]['reading'];
+            double reading = data.docs[index]['reading'];
             var meetsTarget = data.docs[index]['meets_target'];
             return envListing(reading, meetsTarget);
           }
@@ -165,8 +165,8 @@ class HomeState extends State<Home>{
     );
   }
 
-  Widget envListing(int reading, bool meetsTarget){
-    if(meetsTarget){
+  Widget envListing(double reading, int meetsTarget){
+    if(meetsTarget == 1){
       return Card(
           elevation: 0,
           color: Theme.of(context).colorScheme.primaryContainer.withAlpha(50),

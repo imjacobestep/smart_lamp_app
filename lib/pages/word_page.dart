@@ -9,8 +9,10 @@ class WordPage extends StatefulWidget{
   String word;
   bool isLearned;
   String docID;
+  String meaning;
+  String usage;
 
-  WordPage({required this.word, required this.isLearned, required this.docID});
+  WordPage({required this.word, required this.isLearned, required this.docID, required this.meaning, required this.usage});
 
 }
 
@@ -25,6 +27,12 @@ class WordPageState extends State<WordPage>{
 
 
   Widget wordPage(String word, bool isLearned){
+    if(widget.meaning == null){
+      widget.meaning = "meaning";
+    }
+    if(widget.usage == null){
+      widget.usage = "usage";
+    }
     return Column(
 
       children: [
@@ -56,7 +64,8 @@ class WordPageState extends State<WordPage>{
               children: [
                 Text("definition", style: Theme.of(context).textTheme.labelMedium,),
                 const SizedBox(height: 8,),
-                Text("This is the definition of the word.", style: Theme.of(context).textTheme.headlineSmall,),
+                //Text("This is the definition of the word.", style: Theme.of(context).textTheme.headlineSmall,),
+                Text(widget.meaning, style: Theme.of(context).textTheme.headlineSmall,),
               ],
             ),//definition,
           ),
@@ -72,7 +81,8 @@ class WordPageState extends State<WordPage>{
               children: [
                 Text("used in a sentence", style: Theme.of(context).textTheme.labelMedium,),
                 const SizedBox(height: 8,),
-                Text("This is the word used in a sentence that helps contextualize it.", style: Theme.of(context).textTheme.headlineSmall,),
+                //Text("This is the word used in a sentence that helps contextualize it.", style: Theme.of(context).textTheme.headlineSmall,),
+                Text(widget.usage, style: Theme.of(context).textTheme.headlineSmall,),
               ],
             ),//sentence
           ),

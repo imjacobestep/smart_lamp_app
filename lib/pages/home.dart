@@ -68,8 +68,10 @@ class HomeState extends State<Home>{
             var word = data.docs[index]['word'];
             var isLearned = data.docs[index]['learned'];
             var docID = data.docs[index].id;
+            var meaning = data.docs[index]['definition'];
+            var usage = data.docs[index]['use'];
             if(isLearned == true) {
-              return learnedWord(word, isLearned, docID);
+              return learnedWord(word, isLearned, docID, meaning, usage);
             }else{
               return const SizedBox();
             }
@@ -96,8 +98,10 @@ class HomeState extends State<Home>{
           var word = data.docs[index]['word'];
           var isLearned = data.docs[index]['learned'];
           var docID = data.docs[index].id;
+          var meaning = data.docs[index]['definition'];
+          var usage = data.docs[index]['use'];
             if(isLearned == false) {
-              return wordListing(word, isLearned, docID);
+              return wordListing(word, isLearned, docID, meaning, usage);
             }else{
               return const SizedBox();
             }
@@ -107,7 +111,7 @@ class HomeState extends State<Home>{
     );
   }
 
-  Widget wordListing(String word, bool isLearned, String docID){
+  Widget wordListing(String word, bool isLearned, String docID, String meaning, String usage){
     return Card(
       elevation: 0,
       color: Theme.of(context).colorScheme.surfaceVariant,
@@ -122,7 +126,7 @@ class HomeState extends State<Home>{
             ),
             IconButton(
               onPressed: (){
-                toDetails(word, isLearned, docID);
+                toDetails(word, isLearned, docID, meaning, usage);
               },
               icon: const Icon(Icons.chevron_right_sharp),
               iconSize: 32,
@@ -133,7 +137,7 @@ class HomeState extends State<Home>{
     );
   }
 
-  Widget learnedWord(String word, bool isLearned, String docID){
+  Widget learnedWord(String word, bool isLearned, String docID, String meaning, String usage){
     return Card(
         elevation: 0,
         color: Theme.of(context).colorScheme.surfaceVariant,
@@ -154,7 +158,7 @@ class HomeState extends State<Home>{
               ),
               IconButton(
                 onPressed: (){
-                  toDetails(word, isLearned, docID);
+                  toDetails(word, isLearned, docID, meaning, usage);
                 },
                 icon: const Icon(Icons.chevron_right_sharp),
                 iconSize: 32,
@@ -199,9 +203,9 @@ class HomeState extends State<Home>{
     }
   }
 
-  void toDetails(String word, bool isLearned, String docID){
+  void toDetails(String word, bool isLearned, String docID, String meaning, String usage){
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => WordPage(word: word, isLearned: isLearned, docID: docID,))
+        MaterialPageRoute(builder: (context) => WordPage(word: word, isLearned: isLearned, docID: docID, meaning: meaning, usage: usage,))
     );
   }
 

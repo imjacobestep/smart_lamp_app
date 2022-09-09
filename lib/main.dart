@@ -1,11 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 import 'package:flutter/material.dart';
+import 'package:material_color_generator/material_color_generator.dart';
 import 'package:smart_lamp/pages/home.dart';
+
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -28,7 +32,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.green,
+        primarySwatch: generateMaterialColor(color: Color(0xFF80E977)),
       ),
       darkTheme: ThemeData.dark(),
       themeMode: ThemeMode.system,
@@ -70,24 +74,24 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  Widget wordListing(String word, bool isLearned){
+  Widget wordListing(String word, bool isLearned) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-            word,
+          word,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         IconButton(
-            onPressed: (){},
-            icon: Icon(Icons.chevron_right_sharp),
+          onPressed: () {},
+          icon: Icon(Icons.chevron_right_sharp),
           iconSize: 32,
         )
       ],
     );
   }
 
-  Widget wordPage(String word, bool isLearned){
+  Widget wordPage(String word, bool isLearned) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -95,25 +99,30 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-                word,
+              word,
               style: Theme.of(context).textTheme.displaySmall,
             ),
             OutlinedButton(
-                onPressed: (){},
-                child: Icon(Icons.volume_up_sharp),
+              onPressed: () {},
+              child: Icon(Icons.volume_up_sharp),
               style: Theme.of(context).outlinedButtonTheme.style,
             )
           ],
-        ),// word header
+        ), // word header
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text("definition", style: Theme.of(context).textTheme.headlineSmall,),
-            Text("This is the definition of the word.", style: Theme.of(context).textTheme.bodyMedium,)
+            Text(
+              "definition",
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            Text(
+              "This is the definition of the word.",
+              style: Theme.of(context).textTheme.bodyMedium,
+            )
           ],
-        ),//definition
-        Column(
-        ),//sentence
+        ), //definition
+        Column(), //sentence
       ],
     );
   }
@@ -140,12 +149,12 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: ListView.separated(
           padding: const EdgeInsets.all(20),
-          itemBuilder: (BuildContext context, int index){
+          itemBuilder: (BuildContext context, int index) {
             return wordListing(words[index], false);
           },
-          separatorBuilder: (BuildContext context, int index) => const Divider(),
-          itemCount: words.length
-      ),
+          separatorBuilder: (BuildContext context, int index) =>
+              const Divider(),
+          itemCount: words.length),
       /*body: Padding(
         padding: const EdgeInsets.all(20),
         child: wordPage(words[0], false),

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:text_to_speech/text_to_speech.dart';
 
-class WordPage extends StatefulWidget{
-
+class WordPage extends StatefulWidget {
   @override
   WordPageState createState() => WordPageState();
 
@@ -12,48 +12,51 @@ class WordPage extends StatefulWidget{
   String meaning;
   String usage;
 
-  WordPage({required this.word, required this.isLearned, required this.docID, required this.meaning, required this.usage});
-
+  WordPage(
+      {required this.word,
+      required this.isLearned,
+      required this.docID,
+      required this.meaning,
+      required this.usage});
 }
 
-class WordPageState extends State<WordPage>{
+class WordPageState extends State<WordPage> {
   //vars
+  TextToSpeech tts = TextToSpeech();
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
   }
 
-
-
-  Widget wordPage(String word, bool isLearned){
-    if(widget.meaning == null){
-      widget.meaning = "meaning";
-    }
-    if(widget.usage == null){
-      widget.usage = "usage";
-    }
+  Widget wordPage() {
+    widget.meaning ??= "meaning";
+    widget.usage ??= "usage";
     return Column(
-
       children: [
         Padding(
-            padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                word,
+                widget.word,
                 style: Theme.of(context).textTheme.displaySmall,
               ),
-              OutlinedButton(
-                onPressed: () {},
+              IconButton(
+                onPressed: () {
+                  tts.speak(widget.word);
+                },
+                padding: const EdgeInsets.all(15),
                 style: Theme.of(context).outlinedButtonTheme.style,
-                child: const Icon(Icons.volume_up_sharp),
+                icon: const Icon(Icons.volume_up_sharp),
               )
             ],
           ),
-        ),// word header
-        const SizedBox(height: 20,),
+        ), // word header
+        const SizedBox(
+          height: 20,
+        ),
         Card(
           elevation: 0,
           color: Theme.of(context).colorScheme.surfaceVariant,
@@ -62,15 +65,42 @@ class WordPageState extends State<WordPage>{
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text("definition", style: Theme.of(context).textTheme.labelMedium,),
-                const SizedBox(height: 8,),
+                Text(
+                  "definition",
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
                 //Text("This is the definition of the word.", style: Theme.of(context).textTheme.headlineSmall,),
-                Text(widget.meaning, style: Theme.of(context).textTheme.headlineSmall,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.meaning,
+                        maxLines: 10,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        tts.speak(widget.meaning);
+                      },
+                      style: Theme.of(context).outlinedButtonTheme.style,
+                      icon: const Icon(Icons.volume_up_sharp),
+                    )
+                  ],
+                ),
               ],
-            ),//definition,
+            ), //definition,
           ),
         ),
-        const SizedBox(height: 20,),
+        const SizedBox(
+          height: 20,
+        ),
         Card(
           elevation: 0,
           color: Theme.of(context).colorScheme.surfaceVariant,
@@ -79,24 +109,50 @@ class WordPageState extends State<WordPage>{
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text("used in a sentence", style: Theme.of(context).textTheme.labelMedium,),
-                const SizedBox(height: 8,),
+                Text(
+                  "used in a sentence",
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
                 //Text("This is the word used in a sentence that helps contextualize it.", style: Theme.of(context).textTheme.headlineSmall,),
-                Text(widget.usage, style: Theme.of(context).textTheme.headlineSmall,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.usage,
+                        maxLines: 10,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        tts.speak(widget.usage);
+                      },
+                      style: Theme.of(context).outlinedButtonTheme.style,
+                      icon: const Icon(Icons.volume_up_sharp),
+                    )
+                  ],
+                ),
               ],
-            ),//sentence
+            ), //sentence
           ),
         ),
       ],
     );
   }
 
-  Widget getFab(bool isLearned){
-    if(!isLearned){
+  Widget getFab(bool isLearned) {
+    if (!isLearned) {
       return FloatingActionButton.extended(
-        onPressed: (){
-          DocumentReference docRef = FirebaseFirestore.instance.collection("words").doc(widget.docID);
-          var updateInfo = {'learned':true};
+        onPressed: () {
+          DocumentReference docRef =
+              FirebaseFirestore.instance.collection("words").doc(widget.docID);
+          var updateInfo = {'learned': true};
           docRef.update(updateInfo);
           Navigator.pop(context);
         },
@@ -104,33 +160,33 @@ class WordPageState extends State<WordPage>{
         label: const Text('learned'),
         icon: const Icon(Icons.done),
       );
-    }else return const SizedBox();
+    } else {
+      return const SizedBox();
+    }
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: const Text("Details"),
-        leading: const Padding(
-          padding: EdgeInsets.all(10),
-          child: CircleAvatar(
-            radius: 30,
-            backgroundColor: Colors.transparent,
-            //backgroundImage: AssetImage("assets/user_pic.jpg"),
+        appBar: AppBar(
+          centerTitle: true,
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: const Text("Details"),
+          leading: const Padding(
+            padding: EdgeInsets.all(10),
+            child: CircleAvatar(
+              radius: 30,
+              backgroundColor: Colors.transparent,
+              //backgroundImage: AssetImage("assets/user_pic.jpg"),
+            ),
           ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: wordPage(widget.word, widget.isLearned),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: getFab(widget.isLearned)
-    );
+        body: Padding(
+          padding: const EdgeInsets.all(20),
+          child: wordPage(),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: getFab(widget.isLearned));
   }
-
 }

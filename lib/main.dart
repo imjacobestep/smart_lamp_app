@@ -34,7 +34,9 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: generateMaterialColor(color: Color(0xFF80E977)),
       ),
-      darkTheme: ThemeData.dark(),
+      darkTheme: ThemeData.dark(
+        useMaterial3: true,
+      ),
       themeMode: ThemeMode.system,
       home: Home(),
     );

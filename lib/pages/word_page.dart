@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:text_to_speech/text_to_speech.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class WordPage extends StatefulWidget {
   @override
@@ -33,6 +34,7 @@ class WordPageState extends State<WordPage> {
     widget.meaning ??= "meaning";
     widget.usage ??= "usage";
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
           padding: const EdgeInsets.all(20),
@@ -142,8 +144,48 @@ class WordPageState extends State<WordPage> {
             ), //sentence
           ),
         ),
+        const SizedBox(
+          height: 20,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("  see more"),
+            Row(
+              children: [
+                ActionChip(
+                  label: const Text("definitions"),
+                  onPressed: () => _launchUrl(Uri.parse(
+                      "https://www.google.com/search?q=${widget.word}+definition")),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                ActionChip(
+                  onPressed: () => _launchUrl(Uri.parse(
+                      "https://www.google.com/search?tbm=isch&q=${widget.word}")),
+                  label: const Text("images"),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                ActionChip(
+                  onPressed: () => _launchUrl(Uri.parse(
+                      "https://www.google.com/search?tbm=vid&q=${widget.word}+definition")),
+                  label: const Text("videos"),
+                ),
+              ],
+            ),
+          ],
+        ),
       ],
     );
+  }
+
+  Future<void> _launchUrl(_url) async {
+    if (!await launchUrl(_url)) {
+      throw 'Could not launch $_url';
+    }
   }
 
   Widget getFab(bool isLearned) {

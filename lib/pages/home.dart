@@ -52,6 +52,16 @@ class HomeState extends State<Home> {
         });
   }
 
+  bool showTablet() {
+    bool tabletWidth = MediaQuery.of(context).size.width >= 600 ? true : false;
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.portrait
+            ? false
+            : true;
+
+    return tabletWidth && isLandscape ? true : false;
+  }
+
   Widget envDashboard2() {
     return StreamBuilder<QuerySnapshot>(
         stream: luxStream,
@@ -66,18 +76,12 @@ class HomeState extends State<Home> {
             return const Text("Loading");
           }
           final data = snapshot.requireData;
-          /*return ListView.builder(
-              padding: const EdgeInsets.all(20),
-              itemCount: data.size,
-              itemBuilder: (context, index) {
-                double reading = data.docs[index]['reading'];
-                var meetsTarget = data.docs[index]['meets_target'];
-                return envTile(reading, meetsTarget);
-              });*/
+          int gridSize = showTablet() ? 20 : 10;
+
           return GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 //childAspectRatio: 1 / 1,
-                crossAxisCount: 8,
+                crossAxisCount: gridSize,
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
               ),
@@ -97,8 +101,8 @@ class HomeState extends State<Home> {
         ? TextStyle(color: Theme.of(context).colorScheme.primary)
         : TextStyle(color: Theme.of(context).colorScheme.error);
     Color bgColor = meetsTarget == 1
-        ? Theme.of(context).colorScheme.primary.withAlpha(50)
-        : Theme.of(context).colorScheme.error.withAlpha(50);
+        ? Theme.of(context).colorScheme.primary.withAlpha(10)
+        : Theme.of(context).colorScheme.error.withAlpha(10);
     Color goodTile = Theme.of(context).colorScheme.primaryContainer;
     Color badTile = Theme.of(context).colorScheme.errorContainer;
     Color bG =
@@ -115,17 +119,28 @@ class HomeState extends State<Home> {
               clipBehavior: Clip.none,
               children: [
                 Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      color: bG, borderRadius: BorderRadius.circular(20)),
-                  width: double.infinity,
-                  height: 200,
-                  child: Text(
-                    targetText,
-                    style: targetStyle,
-                    textScaleFactor: 2,
-                  ),
-                ),
+                    padding: EdgeInsets.all(20),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: bG, borderRadius: BorderRadius.circular(20)),
+                    width: double.infinity,
+                    height: 200,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          targetText,
+                          style: targetStyle,
+                          textScaleFactor: 2,
+                        ),
+                        Text(
+                          "7 lux or above is proper for reading",
+                          style: targetStyle,
+                          textScaleFactor: 1,
+                        ),
+                      ],
+                    )),
                 Positioned(
                   top: -50,
                   child: Container(
@@ -135,12 +150,12 @@ class HomeState extends State<Home> {
                     decoration: BoxDecoration(
                         color: meetsTarget == 1 ? goodTile : badTile,
                         borderRadius: BorderRadius.circular(20)),
-                    width: 100.0,
+                    width: 200.0,
                     height: 100.0,
                     child: Text(
-                      reading.toString(),
+                      reading.toString() + " lux",
                       style: TextStyle(
-                        color: Colors.white.withAlpha(150),
+                        color: Colors.white.withAlpha(220),
                       ),
                       textScaleFactor: 2,
                     ),
@@ -164,7 +179,8 @@ class HomeState extends State<Home> {
         padding: const EdgeInsets.all(2),
         alignment: Alignment.center,
         child: Text(
-          reading.toString(),
+          "",
+          //reading.toString(),
           style: TextStyle(color: Colors.white.withAlpha(150)),
         ),
         //margin: const EdgeInsets.all(10.0),
@@ -397,7 +413,7 @@ class HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    if (MediaQuery.of(context).size.width >= 600) {
+    if (showTablet()) {
       return Scaffold(
         appBar: appBar(),
         body: Row(

@@ -43,6 +43,9 @@ dependencies:
   text_to_speech: ^0.2.3
   animations: ^2.0.4
   url_launcher: ^6.1.5
+  dictionaryx: ^0.3.5
+  oxford_dictionary: ^2.0.3
+  owlbot_dart: ^2.0.0
 
 
 dev_dependencies:

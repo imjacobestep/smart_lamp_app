@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:owlbot_dart/owlbot_dart.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -25,19 +26,206 @@ class WordPageState extends State<WordPage> {
   //vars
   TextToSpeech tts = TextToSpeech();
 
+  final OwlBot owlBot =
+      OwlBot(token: "7d44c42271f690c92881e042e82805561355dc56");
+
   @override
   void initState() {
     super.initState();
   }
 
+  Widget variant(String partOfSpeech, String definition, String example) {
+    List<Widget> children = [];
+
+    if (partOfSpeech != "-") {
+      children.add(
+        Text(
+          partOfSpeech,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+      );
+      children.add(const Divider());
+    }
+    if (definition != "-") {
+      children.add(Text(
+        "definition",
+        style: Theme.of(context).textTheme.labelMedium,
+      ));
+      children.add(singleDefinition(definition));
+    }
+    if (example != "-") {
+      children.add(const SizedBox(
+        height: 8,
+      ));
+      children.add(Text(
+        "example",
+        style: Theme.of(context).textTheme.labelMedium,
+      ));
+      children.add(singleDefinition(example));
+    }
+
+    return Card(
+      elevation: 0,
+      color: Theme.of(context).colorScheme.surfaceVariant,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: children,
+        ), //definition,
+      ),
+    );
+  }
+
+  Widget singleDefinition(definition) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Text(
+            definition ?? "no definition",
+            maxLines: 10,
+            overflow: TextOverflow.ellipsis,
+            softWrap: false,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            tts.speak(definition);
+          },
+          style: Theme.of(context).outlinedButtonTheme.style,
+          icon: const Icon(Icons.volume_up_sharp),
+        )
+      ],
+    );
+  }
+
+  Widget detailsLoader() {
+    return FutureBuilder(
+      future: owlBot.define(word: widget.word),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.hasData && snapshot.data != null) {
+          var word = snapshot.data;
+
+          List<Widget> children1 = [
+            const SizedBox(
+              height: 20,
+            ),
+            definitionDetails(word.definitions),
+            const SizedBox(
+              height: 20,
+            ),
+            usageDetails(word.definitions),
+            const SizedBox(
+              height: 20,
+            ),
+          ];
+
+          List<Widget> children2 = [];
+          word.definitions.forEach(
+            (element) {
+              children2.add(variant(element.type, element.definition ?? '-',
+                  element.example ?? '-'));
+              children2.add(
+                const SizedBox(
+                  height: 10,
+                ),
+              );
+            },
+          );
+
+          return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: children2);
+        } else {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Text("Word not found"),
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Widget definitionDetails(List<OwlBotDefinition> allDefinitions) {
+    List<Widget> children = [
+      Text(
+        "definitions",
+        style: Theme.of(context).textTheme.labelMedium,
+      ),
+      const SizedBox(
+        height: 8,
+      ),
+    ];
+
+    allDefinitions.forEach(
+      (element) {
+        children.add(singleDefinition(element.definition));
+        children.add(
+          const SizedBox(
+            height: 10,
+          ),
+        );
+      },
+    );
+
+    return Card(
+      elevation: 0,
+      color: Theme.of(context).colorScheme.surfaceVariant,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: children,
+        ), //definition,
+      ),
+    );
+  }
+
+  Widget usageDetails(List<OwlBotDefinition> allExamples) {
+    List<Widget> children = [
+      Text(
+        "used in a sentence",
+        style: Theme.of(context).textTheme.labelMedium,
+      ),
+      const SizedBox(
+        height: 8,
+      ),
+    ];
+
+    allExamples.forEach(
+      (element) {
+        children.add(singleDefinition(element.example));
+        children.add(
+          const SizedBox(
+            height: 10,
+          ),
+        );
+      },
+    );
+
+    return Card(
+      elevation: 0,
+      color: Theme.of(context).colorScheme.surfaceVariant,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: children,
+        ), //definition,
+      ),
+    );
+  }
+
   Widget wordPage() {
-    widget.meaning ??= "meaning";
-    widget.usage ??= "usage";
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return ListView(
       children: [
         Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -56,97 +244,7 @@ class WordPageState extends State<WordPage> {
             ],
           ),
         ), // word header
-        const SizedBox(
-          height: 20,
-        ),
-        Card(
-          elevation: 0,
-          color: Theme.of(context).colorScheme.surfaceVariant,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  "definition",
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                //Text("This is the definition of the word.", style: Theme.of(context).textTheme.headlineSmall,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        widget.meaning,
-                        maxLines: 10,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: false,
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        tts.speak(widget.meaning);
-                      },
-                      style: Theme.of(context).outlinedButtonTheme.style,
-                      icon: const Icon(Icons.volume_up_sharp),
-                    )
-                  ],
-                ),
-              ],
-            ), //definition,
-          ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Card(
-          elevation: 0,
-          color: Theme.of(context).colorScheme.surfaceVariant,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  "used in a sentence",
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                //Text("This is the word used in a sentence that helps contextualize it.", style: Theme.of(context).textTheme.headlineSmall,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        widget.usage,
-                        maxLines: 10,
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: false,
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        tts.speak(widget.usage);
-                      },
-                      style: Theme.of(context).outlinedButtonTheme.style,
-                      icon: const Icon(Icons.volume_up_sharp),
-                    )
-                  ],
-                ),
-              ],
-            ), //sentence
-          ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
+        detailsLoader(),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -199,7 +297,7 @@ class WordPageState extends State<WordPage> {
           Navigator.pop(context);
         },
         tooltip: 'learned',
-        label: const Text('learned'),
+        label: const Text('mark as learned'),
         icon: const Icon(Icons.done),
       );
     } else {
@@ -215,17 +313,9 @@ class WordPageState extends State<WordPage> {
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
           title: const Text("Details"),
-          leading: const Padding(
-            padding: EdgeInsets.all(10),
-            child: CircleAvatar(
-              radius: 30,
-              backgroundColor: Colors.transparent,
-              //backgroundImage: AssetImage("assets/user_pic.jpg"),
-            ),
-          ),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
           child: wordPage(),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

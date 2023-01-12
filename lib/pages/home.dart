@@ -266,7 +266,7 @@ class HomeState extends State<Home> {
       child: InkWell(
         onTap: () => toDetails(word, isLearned, docID, meaning, usage),
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

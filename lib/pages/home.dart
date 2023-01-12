@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:smart_lamp/pages/word_page.dart';
 
 class Home extends StatefulWidget {
+  const Home({super.key});
+
   @override
   HomeState createState() => HomeState();
 }
@@ -119,7 +121,7 @@ class HomeState extends State<Home> {
               clipBehavior: Clip.none,
               children: [
                 Container(
-                    padding: EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(20),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                         color: bG, borderRadius: BorderRadius.circular(20)),
@@ -153,7 +155,7 @@ class HomeState extends State<Home> {
                     width: 200.0,
                     height: 100.0,
                     child: Text(
-                      reading.toString() + " lux",
+                      "$reading lux",
                       style: TextStyle(
                         color: Colors.white.withAlpha(220),
                       ),
@@ -178,17 +180,17 @@ class HomeState extends State<Home> {
       child: Container(
         padding: const EdgeInsets.all(2),
         alignment: Alignment.center,
-        child: Text(
-          "",
-          //reading.toString(),
-          style: TextStyle(color: Colors.white.withAlpha(150)),
-        ),
         //margin: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
             color: meetsTarget == 1 ? goodTile : badTile,
             borderRadius: BorderRadius.circular(4)),
         width: 20.0,
         height: 20.0,
+        child: Text(
+          "",
+          //reading.toString(),
+          style: TextStyle(color: Colors.white.withAlpha(150)),
+        ),
       ),
     );
   }

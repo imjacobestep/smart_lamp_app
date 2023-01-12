@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:owlbot_dart/owlbot_dart.dart';
@@ -15,7 +17,8 @@ class WordPage extends StatefulWidget {
   String usage;
 
   WordPage(
-      {required this.word,
+      {super.key,
+      required this.word,
       required this.isLearned,
       required this.docID,
       required this.meaning,
@@ -109,20 +112,6 @@ class WordPageState extends State<WordPage> {
         if (snapshot.hasData && snapshot.data != null) {
           var word = snapshot.data;
 
-          List<Widget> children1 = [
-            const SizedBox(
-              height: 20,
-            ),
-            definitionDetails(word.definitions),
-            const SizedBox(
-              height: 20,
-            ),
-            usageDetails(word.definitions),
-            const SizedBox(
-              height: 20,
-            ),
-          ];
-
           List<Widget> children2 = [];
           word.definitions.forEach(
             (element) {
@@ -162,16 +151,14 @@ class WordPageState extends State<WordPage> {
       ),
     ];
 
-    allDefinitions.forEach(
-      (element) {
-        children.add(singleDefinition(element.definition));
-        children.add(
-          const SizedBox(
-            height: 10,
-          ),
-        );
-      },
-    );
+    for (var element in allDefinitions) {
+      children.add(singleDefinition(element.definition));
+      children.add(
+        const SizedBox(
+          height: 10,
+        ),
+      );
+    }
 
     return Card(
       elevation: 0,
@@ -197,16 +184,14 @@ class WordPageState extends State<WordPage> {
       ),
     ];
 
-    allExamples.forEach(
-      (element) {
-        children.add(singleDefinition(element.example));
-        children.add(
-          const SizedBox(
-            height: 10,
-          ),
-        );
-      },
-    );
+    for (var element in allExamples) {
+      children.add(singleDefinition(element.example));
+      children.add(
+        const SizedBox(
+          height: 10,
+        ),
+      );
+    }
 
     return Card(
       elevation: 0,
@@ -280,9 +265,9 @@ class WordPageState extends State<WordPage> {
     );
   }
 
-  Future<void> _launchUrl(_url) async {
-    if (!await launchUrl(_url)) {
-      throw 'Could not launch $_url';
+  Future<void> _launchUrl(url) async {
+    if (!await launchUrl(url)) {
+      throw 'Could not launch $url';
     }
   }
 

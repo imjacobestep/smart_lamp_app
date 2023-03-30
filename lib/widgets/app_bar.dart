@@ -94,7 +94,7 @@ Widget headerProfile() {
 
 Widget headerLogo() {
   return Image.asset(
-    "lib/assets/vl_icon.png",
+    "assets/vl_icon.png",
     height: 50,
     width: 50,
   );

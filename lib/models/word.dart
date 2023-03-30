@@ -34,7 +34,7 @@ class Word {
   }
 
   bool showToday() {
-    int daysSinceAdded = getDaysSince(dateAdded!);
+    int daysSinceAdded = dateAdded != null ? getDaysSince(dateAdded!) : 0;
     int daysSinceLearned = getDaysSince(lastLearned!);
     bool repeatDay = false;
 

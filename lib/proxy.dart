@@ -57,11 +57,32 @@ class Proxy {
     return snapshot;
   }
 
-  Future<Iterable<dynamic>> listWhere(
-      String collection, String attribute, dynamic value) async {
+  Future<Iterable<dynamic>> listWhere(String collection, String attribute,
+      dynamic value, String operator) async {
     final ref = _getRef(collection);
     var query = ref.where(attribute, isEqualTo: value);
 
+    switch (operator) {
+      case "=":
+        query = ref.where(attribute, isEqualTo: value);
+        break;
+      case "!=":
+        query = ref.where(attribute, isNotEqualTo: value);
+        break;
+      case "<":
+        query = ref.where(attribute, isLessThan: value);
+        break;
+      case "<=":
+        query = ref.where(attribute, isLessThanOrEqualTo: value);
+        break;
+      case ">":
+        query = ref.where(attribute, isGreaterThan: value);
+        break;
+      case ">=":
+        query = ref.where(attribute, isGreaterThanOrEqualTo: value);
+        break;
+      default:
+    }
     final snapshot =
         await query.get().then((value) => value.docs.map((e) => e.data()));
     return snapshot;

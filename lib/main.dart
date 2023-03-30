@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:material_color_generator/material_color_generator.dart';
+import 'package:smart_lamp/assets/theme.dart';
 import 'package:smart_lamp/pages/home.dart';
 
 import 'firebase_options.dart';
@@ -33,10 +34,11 @@ class MyApp extends StatelessWidget {
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
         primarySwatch: generateMaterialColor(color: const Color(0xFF80E977)),
-        canvasColor: const Color(0xffFEFBFE),
+        // canvasColor: canvas,
+        // scaffoldBackgroundColor: canvas,
         cardTheme: CardTheme(
           color: const Color(0xFFF6F6F6),
-          surfaceTintColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
           elevation: 0,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),

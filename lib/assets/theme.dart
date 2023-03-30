@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Color black = const Color(0xff1A1A1A);
+Color dark = const Color(0xff373737);
 Color canvas = const Color(0xffFCFBF7);
 Color surface = const Color(0xffC8DECB);
 Color accent = const Color(0xff0D7B58);

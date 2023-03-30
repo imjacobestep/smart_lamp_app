@@ -6,7 +6,7 @@ class Word {
   String? word;
   String? definition;
   String? use;
-  int isLearned = 0;
+  int? isLearned;
   Timestamp? dateAdded;
   Timestamp? lastLearned;
 
@@ -15,7 +15,7 @@ class Word {
       this.word,
       this.definition,
       this.use,
-      isLearned,
+      this.isLearned,
       this.dateAdded,
       this.lastLearned});
 
@@ -60,7 +60,8 @@ class Word {
   }
 
   void markLearned() {
-    isLearned += 1;
+    int temp = isLearned != null ? isLearned! : 0;
+    temp += 1;
     lastLearned = DateTime.now() as Timestamp?;
   }
 

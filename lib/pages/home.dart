@@ -2,8 +2,11 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_lamp/assets/theme.dart';
 import 'package:smart_lamp/widgets/home_lists.dart';
 import 'package:smart_lamp/widgets/home_tabs.dart';
+import 'package:smart_lamp/widgets/navbar.dart';
+import 'package:status_bar_control/status_bar_control.dart';
 
 import '../models/word.dart';
 import '../proxy.dart';
@@ -18,6 +21,7 @@ class Home extends StatefulWidget {
   Proxy proxyModel = Proxy();
   Future<Iterable>? newWordList;
   Future<Iterable>? learnedWordList;
+  Future<dynamic>? transparent;
 
   @override
   HomeState createState() => HomeState();
@@ -37,11 +41,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    widget.transparent = StatusBarControl.setTranslucent(false);
+    widget.transparent =
+        StatusBarControl.setNavigationBarColor(canvas, animated: true);
+    widget.transparent = StatusBarControl.setStyle(StatusBarStyle.DARK_CONTENT);
     tabController = TabController(length: 3, vsync: this, initialIndex: 0);
-    widget.newWordList =
-        widget.proxyModel.listWhere('words', 'learned', 4, "<");
-    widget.learnedWordList =
-        widget.proxyModel.listWhere('words', 'learned', 4, "=");
   }
 
   void _onItemTapped(int index) {
@@ -57,9 +61,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       tabIndicator(Icons.check_circle_outline_outlined, "Learned")
     ];
     List<Widget> tabContent = [
-      learnWords(widget.newWordList!),
-      chronologicalList(widget.newWordList!),
-      chronologicalList(widget.learnedWordList!)
+      learnWords(widget.proxyModel),
+      chronologicalList(widget.proxyModel, false),
+      chronologicalList(widget.proxyModel, true)
     ];
 
     if (index == 1) {
@@ -71,12 +75,25 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     }
   }
 
+  Widget homeNavBar() {
+    List<Widget> buttons = [
+      navIcon("Words", Icons.feed_outlined, () => _onItemTapped(0),
+          (_selectedIndex == 0)),
+      navIcon("Stats", Icons.insights_outlined, () => _onItemTapped(1),
+          (_selectedIndex == 1)),
+      navIcon("Lighting", Icons.light_outlined, () => _onItemTapped(2),
+          (_selectedIndex == 2))
+    ];
+    return navBar(buttons, _selectedIndex, context);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (showTablet(context)) {
       return DefaultTabController(
         length: 3,
         child: Scaffold(
+          backgroundColor: surface,
           appBar: appBar(headerLogo(), "VocaLamp", headerProfile()),
           body: Row(
             children: [
@@ -103,21 +120,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       );
     } else {
       return Scaffold(
+          backgroundColor: surface,
           appBar: appBar(headerLogo(), "VocaLamp", headerProfile()),
           //body: getView(_selectedIndex),
           body: getView(_selectedIndex),
-          bottomNavigationBar: NavigationBar(
-            destinations: const [
-              NavigationDestination(
-                  icon: Icon(Icons.feed_outlined), label: "Words"),
-              NavigationDestination(
-                  icon: Icon(Icons.insights_outlined), label: "Stats"),
-              NavigationDestination(
-                  icon: Icon(Icons.light_outlined), label: "Lighting"),
-            ],
-            selectedIndex: _selectedIndex,
-            onDestinationSelected: _onItemTapped,
-          ));
+          bottomNavigationBar: homeNavBar());
     }
   }
 }

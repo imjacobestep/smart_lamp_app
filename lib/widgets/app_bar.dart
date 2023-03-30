@@ -17,7 +17,7 @@ PreferredSizeWidget appBar(Widget left, String title, Widget right) {
               Expanded(
                 flex: 3,
                 child: Center(
-                    child: (title == "Vocalamp")
+                    child: (title == "VocaLamp")
                         ? homeTitle(title)
                         : pageTitle(title)),
               ),
@@ -40,7 +40,7 @@ Widget pageTitle(String title) {
 Widget headerBack(BuildContext context) {
   return ElevatedButton(
       style: ElevatedButton.styleFrom(
-          foregroundColor: black,
+          foregroundColor: dark,
           backgroundColor: surface,
           shape: const CircleBorder()),
       onPressed: () {
@@ -59,7 +59,7 @@ Widget headerBack(BuildContext context) {
 Widget headerSpeak(String word, dynamic tts) {
   return ElevatedButton(
       style: ElevatedButton.styleFrom(
-          foregroundColor: black,
+          foregroundColor: dark,
           backgroundColor: surface,
           shape: const CircleBorder()),
       onPressed: () {
@@ -78,8 +78,8 @@ Widget headerSpeak(String word, dynamic tts) {
 Widget headerProfile() {
   return ElevatedButton(
       style: ElevatedButton.styleFrom(
-          foregroundColor: black,
-          backgroundColor: surface,
+          foregroundColor: dark,
+          backgroundColor: canvas,
           shape: const CircleBorder()),
       onPressed: () {},
       child: const SizedBox(
@@ -94,7 +94,7 @@ Widget headerProfile() {
 
 Widget headerLogo() {
   return Image.asset(
-    "assets/vl_icon.png",
+    "lib/assets/vl_icon.png",
     height: 50,
     width: 50,
   );

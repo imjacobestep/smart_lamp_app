@@ -1,15 +1,28 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_lamp/pages/word_page.dart';
+import 'package:smart_lamp/widgets/home_tabs.dart';
+
+import '../models/word.dart';
+import '../proxy.dart';
+import '../utilities.dart';
+import '../widgets/app_bar.dart';
+import '../widgets/environment.dart';
+import '../widgets/word_listing.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  Home({super.key});
+
+  Proxy proxyModel = Proxy();
+  Future<Iterable>? newWordList;
+  Future<Iterable>? learnedWordList;
 
   @override
   HomeState createState() => HomeState();
 }
 
-class HomeState extends State<Home> {
+class HomeState extends State<Home> with TickerProviderStateMixin {
   //vars
   List<String> titles = ["New Words", "Learned Words", "Lighting"];
   int _selectedIndex = 0;
@@ -18,15 +31,49 @@ class HomeState extends State<Home> {
   final Stream<QuerySnapshot> luxStream =
       FirebaseFirestore.instance.collection('environment').snapshots();
 
+  late TabController tabController;
+
   @override
   void initState() {
     super.initState();
+    tabController = TabController(length: 2, vsync: this, initialIndex: 0);
+    widget.newWordList = widget.proxyModel.listWhere('words', 'learned', false);
+    widget.learnedWordList =
+        widget.proxyModel.listWhere('words', 'learned', true);
   }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  Widget wordsBuilder(bool newWords) {
+    return FutureBuilder(
+        future: newWords ? widget.newWordList : widget.learnedWordList,
+        builder: (BuildContext context, AsyncSnapshot<Iterable> snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data != null) {
+              final data = snapshot.requireData;
+              return ListView.builder(
+                  padding: const EdgeInsets.all(20),
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    Word word = data.elementAt(index);
+                    return wordListing(word, context);
+                  });
+            } else {
+              return const Text("No new words!");
+            }
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Text("Loading");
+          } else if (snapshot.hasError) {
+            return const Text("Something went wrong");
+          } else {
+            // ignore: unnecessary_string_escapes
+            return const Text("¯\_(ツ)_/¯");
+          }
+        });
   }
 
   Widget envDashboard() {
@@ -49,410 +96,70 @@ class HomeState extends State<Home> {
               itemBuilder: (context, index) {
                 double reading = data.docs[index]['reading'];
                 var meetsTarget = data.docs[index]['meets_target'];
-                return envListing(reading, meetsTarget);
+                return envListing(reading, meetsTarget, context);
               });
         });
-  }
-
-  bool showTablet() {
-    bool tabletWidth = MediaQuery.of(context).size.width >= 600 ? true : false;
-    bool isLandscape =
-        MediaQuery.of(context).orientation == Orientation.portrait
-            ? false
-            : true;
-
-    return tabletWidth && isLandscape ? true : false;
-  }
-
-  Widget envDashboard2() {
-    return StreamBuilder<QuerySnapshot>(
-        stream: luxStream,
-        builder: (
-          BuildContext context,
-          AsyncSnapshot<QuerySnapshot> snapshot,
-        ) {
-          if (snapshot.hasError) {
-            return const Text("Something went wrong");
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text("Loading");
-          }
-          final data = snapshot.requireData;
-          int gridSize = showTablet() ? 20 : 10;
-
-          return GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                //childAspectRatio: 1 / 1,
-                crossAxisCount: gridSize,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-              ),
-              itemCount: data.size,
-              padding: const EdgeInsets.all(20),
-              itemBuilder: (context, index) {
-                double reading = data.docs[index]['reading'];
-                var meetsTarget = data.docs[index]['meets_target'];
-                return envTile(reading, meetsTarget);
-              });
-        });
-  }
-
-  Future envPopup(double reading, int meetsTarget) async {
-    String targetText = meetsTarget == 1 ? "Adequate" : "Too Dim";
-    TextStyle targetStyle = meetsTarget == 1
-        ? TextStyle(color: Theme.of(context).colorScheme.primary)
-        : TextStyle(color: Theme.of(context).colorScheme.error);
-    Color bgColor = meetsTarget == 1
-        ? Theme.of(context).colorScheme.primary.withAlpha(10)
-        : Theme.of(context).colorScheme.error.withAlpha(10);
-    Color goodTile = Theme.of(context).colorScheme.primaryContainer;
-    Color badTile = Theme.of(context).colorScheme.errorContainer;
-    Color bG =
-        Color.alphaBlend(bgColor, Theme.of(context).dialogBackgroundColor);
-
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: Colors.transparent,
-            content: Stack(
-              alignment: Alignment.center,
-              //mainAxisSize: MainAxisSize.min,
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                    padding: const EdgeInsets.all(20),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: bG, borderRadius: BorderRadius.circular(20)),
-                    width: double.infinity,
-                    height: 200,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          targetText,
-                          style: targetStyle,
-                          textScaleFactor: 2,
-                        ),
-                        Text(
-                          "7 lux or above is proper for reading",
-                          style: targetStyle,
-                          textScaleFactor: 1,
-                        ),
-                      ],
-                    )),
-                Positioned(
-                  top: -50,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    alignment: Alignment.center,
-                    //margin: const EdgeInsets.all(10.0),
-                    decoration: BoxDecoration(
-                        color: meetsTarget == 1 ? goodTile : badTile,
-                        borderRadius: BorderRadius.circular(20)),
-                    width: 200.0,
-                    height: 100.0,
-                    child: Text(
-                      "$reading lux",
-                      style: TextStyle(
-                        color: Colors.white.withAlpha(220),
-                      ),
-                      textScaleFactor: 2,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-  }
-
-  Widget envTile(double reading, int meetsTarget) {
-    Color goodTile = Theme.of(context).colorScheme.primaryContainer;
-    Color badTile = Theme.of(context).colorScheme.errorContainer;
-
-    return InkWell(
-      onTap: () {
-        envPopup(reading, meetsTarget);
-      },
-      child: Container(
-        padding: const EdgeInsets.all(2),
-        alignment: Alignment.center,
-        //margin: const EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-            color: meetsTarget == 1 ? goodTile : badTile,
-            borderRadius: BorderRadius.circular(4)),
-        width: 20.0,
-        height: 20.0,
-        child: Text(
-          "",
-          //reading.toString(),
-          style: TextStyle(color: Colors.white.withAlpha(150)),
-        ),
-      ),
-    );
-  }
-
-  Widget learnedWordList() {
-    return StreamBuilder<QuerySnapshot>(
-        stream: wordStream,
-        builder: (
-          BuildContext context,
-          AsyncSnapshot<QuerySnapshot> snapshot,
-        ) {
-          if (snapshot.hasError) {
-            return const Text("Something went wrong");
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text("Loading");
-          }
-          final data = snapshot.requireData;
-          return ListView.builder(
-              padding: const EdgeInsets.all(20),
-              itemCount: data.size,
-              itemBuilder: (context, index) {
-                var word = data.docs[index]['word'];
-                var isLearned = data.docs[index]['learned'];
-                var docID = data.docs[index].id;
-                var meaning = data.docs[index]['definition'];
-                var usage = data.docs[index]['use'];
-                if (isLearned == true) {
-                  return learnedWord(word, isLearned, docID, meaning, usage);
-                } else {
-                  return const SizedBox();
-                }
-              });
-        });
-  }
-
-  Widget wordList() {
-    return StreamBuilder<QuerySnapshot>(
-        stream: wordStream,
-        builder: (
-          BuildContext context,
-          AsyncSnapshot<QuerySnapshot> snapshot,
-        ) {
-          if (snapshot.hasError) {
-            return const Text("Something went wrong");
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text("Loading");
-          }
-          final data = snapshot.requireData;
-          return ListView.builder(
-              padding: const EdgeInsets.all(20),
-              itemCount: data.size,
-              itemBuilder: (context, index) {
-                var word = data.docs[index]['word'];
-                var isLearned = data.docs[index]['learned'];
-                var docID = data.docs[index].id;
-                var meaning = data.docs[index]['definition'];
-                var usage = data.docs[index]['use'];
-                if (isLearned == false) {
-                  return wordListing(word, isLearned, docID, meaning, usage);
-                } else {
-                  return const SizedBox();
-                }
-              });
-        });
-  }
-
-  Widget wordListing(
-      String word, bool isLearned, String docID, String meaning, String usage) {
-    //
-    return Card(
-      elevation: 0,
-      color: Theme.of(context).colorScheme.surfaceVariant,
-      child: InkWell(
-        onTap: () => toDetails(word, isLearned, docID, meaning, usage),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                word,
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              IconButton(
-                onPressed: () {
-                  toDetails(word, isLearned, docID, meaning, usage);
-                },
-                icon: const Icon(Icons.chevron_right_sharp),
-                iconSize: 32,
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget learnedWord(
-      String word, bool isLearned, String docID, String meaning, String usage) {
-    return Card(
-      elevation: 0,
-      color: Theme.of(context).colorScheme.surfaceVariant,
-      child: InkWell(
-        onTap: () => toDetails(word, isLearned, docID, meaning, usage),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    word,
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Icon(
-                    Icons.done_sharp,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ],
-              ),
-              IconButton(
-                onPressed: () {
-                  toDetails(word, isLearned, docID, meaning, usage);
-                },
-                icon: const Icon(Icons.chevron_right_sharp),
-                iconSize: 32,
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget envListing(double reading, int meetsTarget) {
-    if (meetsTarget == 1) {
-      return Card(
-          elevation: 0,
-          color: Theme.of(context).colorScheme.primaryContainer.withAlpha(50),
-          child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    reading.toString(),
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  Text(
-                    "ideal",
-                    style:
-                        TextStyle(color: Theme.of(context).colorScheme.primary),
-                  ),
-                ],
-              )));
-    } else {
-      return Card(
-          elevation: 0,
-          color: Theme.of(context).colorScheme.errorContainer.withAlpha(50),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  reading.toString(),
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-                Text(
-                  "too dim",
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
-                ),
-              ],
-            ),
-          ));
-    }
-  }
-
-  void toDetails(
-      String word, bool isLearned, String docID, String meaning, String usage) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => WordPage(
-                  word: word,
-                  isLearned: isLearned,
-                  docID: docID,
-                  meaning: meaning,
-                  usage: usage,
-                )));
   }
 
   Widget getView(int index) {
-    if (index == 1) {
-      return learnedWordList();
-    } else if (index == 2) {
-      return envDashboard2();
-    } else {
-      return wordList();
-    }
-  }
+    List<Widget> tabs = [
+      tabIndicator(Icons.new_releases_outlined, "New"),
+      tabIndicator(Icons.check_circle_outline_outlined, "Learned")
+    ];
+    List<Widget> tabContent = [wordsBuilder(true), wordsBuilder(false)];
 
-  PreferredSizeWidget appBar() {
-    return AppBar(
-      centerTitle: true,
-      title: Text(titles[_selectedIndex]),
-      leading: const Padding(
-        padding: EdgeInsets.all(10),
-        child: CircleAvatar(
-          radius: 40,
-          backgroundImage: AssetImage("assets/user_pic.jpg"),
-        ),
-      ),
-    );
+    if (index == 1) {
+      return tabView(tabController, tabContent, tabs, context);
+    } else if (index == 2) {
+      return envDashboard2(luxStream, context);
+    } else {
+      return tabView(tabController, tabContent, tabs, context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (showTablet()) {
-      return Scaffold(
-        appBar: appBar(),
-        body: Row(
-          children: [
-            NavigationRail(
-              extended: MediaQuery.of(context).size.width >= 800,
-              minExtendedWidth: 180,
-              destinations: const [
-                NavigationRailDestination(
-                    icon: Icon(Icons.home_sharp), label: Text("home")),
-                NavigationRailDestination(
-                    icon: Icon(Icons.history_sharp), label: Text("learned")),
-                NavigationRailDestination(
-                    icon: Icon(Icons.light_sharp), label: Text("lighting")),
-              ],
-              selectedIndex: _selectedIndex,
-              onDestinationSelected: _onItemTapped,
-            ),
-            Expanded(
-              child: getView(_selectedIndex),
-            ),
-          ],
+    if (showTablet(context)) {
+      return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: appBar(headerLogo(), "VocaLamp", headerProfile()),
+          body: Row(
+            children: [
+              NavigationRail(
+                extended: MediaQuery.of(context).size.width >= 800,
+                minExtendedWidth: 180,
+                destinations: const [
+                  NavigationRailDestination(
+                      icon: Icon(Icons.home_sharp), label: Text("home")),
+                  NavigationRailDestination(
+                      icon: Icon(Icons.history_sharp), label: Text("learned")),
+                  NavigationRailDestination(
+                      icon: Icon(Icons.light_sharp), label: Text("lighting")),
+                ],
+                selectedIndex: _selectedIndex,
+                onDestinationSelected: _onItemTapped,
+              ),
+              Expanded(
+                child: getView(_selectedIndex),
+              ),
+            ],
+          ),
         ),
       );
     } else {
       return Scaffold(
-          appBar: appBar(),
+          appBar: appBar(headerLogo(), "VocaLamp", headerProfile()),
           //body: getView(_selectedIndex),
           body: getView(_selectedIndex),
           bottomNavigationBar: NavigationBar(
             destinations: const [
               NavigationDestination(
-                  icon: Icon(Icons.home_sharp), label: "home"),
+                  icon: Icon(Icons.feed_outlined), label: "Words"),
               NavigationDestination(
-                  icon: Icon(Icons.history_sharp), label: "learned"),
+                  icon: Icon(Icons.insights_outlined), label: "Stats"),
               NavigationDestination(
-                  icon: Icon(Icons.light_sharp), label: "lighting"),
+                  icon: Icon(Icons.light_outlined), label: "Lighting"),
             ],
             selectedIndex: _selectedIndex,
             onDestinationSelected: _onItemTapped,

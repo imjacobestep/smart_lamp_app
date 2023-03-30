@@ -16,8 +16,6 @@ class Storybook extends StatefulWidget {
 
   Word word;
   Proxy proxyModel = Proxy();
-  // String aiKey = Env.aiKey;
-  String aiKey = "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";
 
   Future<Map<dynamic, dynamic>>? storybook;
 

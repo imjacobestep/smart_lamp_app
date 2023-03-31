@@ -1,4 +1,4 @@
-import 'models/word.dart';
+import 'word.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Proxy {

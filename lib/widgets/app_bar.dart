@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_lamp/assets/theme.dart';
+import 'package:smart_lamp/utilities.dart';
 
 PreferredSizeWidget appBar(Widget left, String title, Widget right) {
   return AppBar(
@@ -56,14 +57,14 @@ Widget headerBack(BuildContext context) {
       ));
 }
 
-Widget headerSpeak(String word, dynamic tts) {
+Widget headerSpeak(String word) {
   return ElevatedButton(
       style: ElevatedButton.styleFrom(
           foregroundColor: dark,
           backgroundColor: surface,
           shape: const CircleBorder()),
       onPressed: () {
-        tts.speak(word);
+        speakContent(word);
       },
       child: const SizedBox(
         height: 50,

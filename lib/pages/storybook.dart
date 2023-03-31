@@ -4,8 +4,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:page_flip/page_flip.dart';
-import 'package:smart_lamp/ai.dart';
-import 'package:smart_lamp/proxy.dart';
+import 'package:smart_lamp/models/ai.dart';
+import 'package:smart_lamp/models/proxy.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 
 import '../models/word.dart';

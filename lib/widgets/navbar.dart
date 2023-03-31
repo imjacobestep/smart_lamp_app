@@ -22,7 +22,10 @@ Widget navIcon(
               size: 30,
             ),
             getSpacer(10),
-            Text(label)
+            Text(
+              label,
+              style: TextStyle(fontSize: 16),
+            )
           ],
         )),
   );
@@ -35,6 +38,18 @@ Widget navBar(List<Widget> buttons, int currentIndex, BuildContext context) {
     width: MediaQuery.of(context).size.width,
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
+      children: buttons,
+    ),
+  );
+}
+
+Widget fabBar(List<Widget> buttons, BuildContext context) {
+  return Container(
+    color: Colors.transparent,
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    width: MediaQuery.of(context).size.width,
+    child: Row(
       mainAxisSize: MainAxisSize.max,
       children: buttons,
     ),

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:smart_lamp/models/date_converter.dart';
 
+import 'proxy.dart';
+
 class Word {
   final String? id;
   String? word;
@@ -60,9 +62,12 @@ class Word {
   }
 
   void markLearned() {
+    Proxy proxyModel = Proxy();
     int temp = isLearned != null ? isLearned! : 0;
     temp += 1;
-    lastLearned = DateTime.now() as Timestamp?;
+    isLearned = temp;
+    lastLearned = Timestamp.now();
+    proxyModel.upsert(this);
   }
 
   Map<String, dynamic> toFirestore() {

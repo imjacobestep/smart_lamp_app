@@ -3,7 +3,7 @@ import 'package:smart_lamp/widgets/placeholder_text.dart';
 import 'package:smart_lamp/widgets/word_listing.dart';
 
 import '../models/word.dart';
-import '../proxy.dart';
+import '../models/proxy.dart';
 
 Widget learnWords(Proxy proxyModel) {
   return FutureBuilder(

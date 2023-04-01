@@ -2,12 +2,12 @@ import 'package:change_case/change_case.dart';
 import 'package:dart_openai/openai.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_lamp/assets/theme.dart';
-import 'package:smart_lamp/widgets/chat_elements.dart';
-import 'package:smart_lamp/widgets/spacer.dart';
-import 'package:smart_lamp/widgets/word_variant_card.dart';
+import 'package:smart_lamp/widgets/chat/chat_elements.dart';
+import 'package:smart_lamp/widgets/general/spacer.dart';
+import 'package:smart_lamp/widgets/word/word_variant_card.dart';
 
-import '../keys.dart';
-import '../models/ai.dart';
+import '../../models/ai.dart';
+import '../../keys.dart';
 
 Widget gptMessage(String word) {
   OpenAI.apiKey = aiKey;
@@ -29,7 +29,7 @@ Widget gptMessage(String word) {
       }
       return Card(
           child: Padding(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           getProfilePic(word, false),
           getSpacer(10),

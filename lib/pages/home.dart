@@ -3,15 +3,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_lamp/assets/theme.dart';
-import 'package:smart_lamp/widgets/home_lists.dart';
-import 'package:smart_lamp/widgets/home_tabs.dart';
-import 'package:smart_lamp/widgets/navbar.dart';
+import 'package:smart_lamp/widgets/home/home_lists.dart';
 import 'package:status_bar_control/status_bar_control.dart';
 
 import '../models/proxy.dart';
 import '../utilities.dart';
-import '../widgets/app_bar.dart';
+import '../widgets/general/app_bar.dart';
 import '../widgets/environment.dart';
+import '../widgets/general/navbar.dart';
+import '../widgets/home/home_tabs.dart';
 
 class Home extends StatefulWidget {
   Home({super.key});
@@ -19,7 +19,7 @@ class Home extends StatefulWidget {
   Proxy proxyModel = Proxy();
   Future<Iterable>? newWordList;
   Future<Iterable>? learnedWordList;
-  Future<dynamic>? transparent;
+  Future<dynamic>? statusbarControl;
 
   @override
   HomeState createState() => HomeState();
@@ -39,10 +39,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    widget.transparent = StatusBarControl.setTranslucent(false);
-    widget.transparent =
+    widget.statusbarControl = StatusBarControl.setTranslucent(false);
+    widget.statusbarControl =
         StatusBarControl.setNavigationBarColor(canvas, animated: true);
-    widget.transparent = StatusBarControl.setStyle(StatusBarStyle.DARK_CONTENT);
+    widget.statusbarControl =
+        StatusBarControl.setStyle(StatusBarStyle.DARK_CONTENT);
     tabController = TabController(length: 3, vsync: this, initialIndex: 0);
   }
 
@@ -92,7 +93,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         length: 3,
         child: Scaffold(
           backgroundColor: surface,
-          appBar: appBar(headerLogo(), "VocaLamp", headerProfile()),
+          appBar:
+              appBar(headerLogo(), "VocaLamp", dark, headerProfile(context)),
           body: Row(
             children: [
               NavigationRail(
@@ -119,7 +121,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     } else {
       return Scaffold(
           backgroundColor: surface,
-          appBar: appBar(headerLogo(), "VocaLamp", headerProfile()),
+          appBar:
+              appBar(headerLogo(), "VocaLamp", dark, headerProfile(context)),
           //body: getView(_selectedIndex),
           body: getView(_selectedIndex),
           bottomNavigationBar: homeNavBar());

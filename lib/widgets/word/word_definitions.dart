@@ -1,8 +1,12 @@
+// ignore_for_file: unnecessary_string_escapes
+
 import 'package:flutter/material.dart';
 import 'package:smart_lamp/models/dictionary.dart';
-import 'package:smart_lamp/widgets/placeholder_text.dart';
-import 'package:smart_lamp/widgets/spacer.dart';
-import 'package:smart_lamp/widgets/word_variant_card.dart';
+import 'package:smart_lamp/widgets/general/placeholder_text.dart';
+import 'package:smart_lamp/widgets/general/spacer.dart';
+import 'package:smart_lamp/widgets/word/word_variant_card.dart';
+
+import '../../assets/theme.dart';
 
 Widget wordDefinitions(String word) {
   return FutureBuilder(
@@ -22,22 +26,22 @@ Widget wordDefinitions(String word) {
               },
             );
             return ListView(
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               children: variants,
             );
           } else {
             return listPlaceholder(
-                "No variants found", Icons.check_circle_outline_outlined);
+                "No variants found", Icons.check_circle_outline_outlined, dark);
           }
         } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return listPlaceholder("Loading", Icons.cloud_sync_outlined);
+          return listPlaceholder("Loading", Icons.cloud_sync_outlined, dark);
         } else if (snapshot.hasError) {
           return listPlaceholder(
-              "Something went wrong", Icons.error_outline_outlined);
+              "Something went wrong", Icons.error_outline_outlined, dark);
         } else {
-          // ignore: unnecessary_string_escapes
-          return listPlaceholder("¯\_(ツ)_/¯", Icons.error_outline_outlined);
+          return listPlaceholder(
+              "¯\_(ツ)_/¯", Icons.error_outline_outlined, dark);
         }
       });
 }

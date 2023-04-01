@@ -1,9 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:smart_lamp/widgets/placeholder_text.dart';
-import 'package:smart_lamp/widgets/word_listing.dart';
+// ignore_for_file: unnecessary_string_escapes
 
-import '../models/word.dart';
-import '../models/proxy.dart';
+import 'package:flutter/material.dart';
+import 'package:smart_lamp/widgets/general/placeholder_text.dart';
+import 'package:smart_lamp/widgets/home/word_listing.dart';
+
+import '../../assets/theme.dart';
+import '../../models/word.dart';
+import '../../models/proxy.dart';
 
 Widget learnWords(Proxy proxyModel) {
   return FutureBuilder(
@@ -21,21 +24,21 @@ Widget learnWords(Proxy proxyModel) {
                     return wordListing(word, context);
                   });
             } else {
-              return listPlaceholder(
-                  "You're all caught up!", Icons.check_circle_outline_outlined);
+              return listPlaceholder("You're all caught up!",
+                  Icons.check_circle_outline_outlined, dark);
             }
           } else {
             return listPlaceholder(
-                "No new words", Icons.check_circle_outline_outlined);
+                "No new words", Icons.check_circle_outline_outlined, dark);
           }
         } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return listPlaceholder("Loading", Icons.cloud_sync_outlined);
+          return listPlaceholder("Loading", Icons.cloud_sync_outlined, dark);
         } else if (snapshot.hasError) {
           return listPlaceholder(
-              "Something went wrong", Icons.error_outline_outlined);
+              "Something went wrong", Icons.error_outline_outlined, dark);
         } else {
-          // ignore: unnecessary_string_escapes
-          return listPlaceholder("¯\_(ツ)_/¯", Icons.error_outline_outlined);
+          return listPlaceholder(
+              "¯\_(ツ)_/¯", Icons.error_outline_outlined, dark);
         }
       });
 }
@@ -58,16 +61,16 @@ Widget chronologicalList(Proxy proxyModel, bool learned) {
                 });
           } else {
             return listPlaceholder(
-                "No new words", Icons.check_circle_outline_outlined);
+                "No new words", Icons.check_circle_outline_outlined, dark);
           }
         } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return listPlaceholder("Loading", Icons.cloud_sync_outlined);
+          return listPlaceholder("Loading", Icons.cloud_sync_outlined, dark);
         } else if (snapshot.hasError) {
           return listPlaceholder(
-              "Something went wrong", Icons.error_outline_outlined);
+              "Something went wrong", Icons.error_outline_outlined, dark);
         } else {
-          // ignore: unnecessary_string_escapes
-          return listPlaceholder("¯\_(ツ)_/¯", Icons.error_outline_outlined);
+          return listPlaceholder(
+              "¯\_(ツ)_/¯", Icons.error_outline_outlined, dark);
         }
       });
 }

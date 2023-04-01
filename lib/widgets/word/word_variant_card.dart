@@ -1,9 +1,9 @@
 import 'package:change_case/change_case.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_lamp/utilities.dart';
-import 'package:smart_lamp/widgets/spacer.dart';
+import 'package:smart_lamp/widgets/general/spacer.dart';
 
-import '../assets/theme.dart';
+import '../../assets/theme.dart';
 
 Widget wordVariant(
   String partOfSpeech,

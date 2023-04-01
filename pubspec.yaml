@@ -55,6 +55,7 @@ dependencies:
   page_flip: ^0.0.3
   status_bar_control: ^3.2.1
   change_case: ^1.1.0
+  google_fonts: ^4.0.3
 
 dev_dependencies:
   flutter_test:

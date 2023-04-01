@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:smart_lamp/widgets/spacer.dart';
+import 'package:smart_lamp/widgets/general/spacer.dart';
 
-import '../assets/theme.dart';
+import '../../assets/theme.dart';
 
 Widget navIcon(
     String label, IconData icon, void Function() tapFunction, bool isPrimary) {
@@ -24,7 +24,7 @@ Widget navIcon(
             getSpacer(10),
             Text(
               label,
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             )
           ],
         )),

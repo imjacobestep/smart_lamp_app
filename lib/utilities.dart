@@ -31,6 +31,9 @@ Future<void> googleSearch(String word, String searchType) async {
       launchURL(Uri.parse(
           "https://www.google.com/search?tbm=vid&q=$word+definition"));
       break;
+    case "youtube":
+      launchURL(Uri.parse("https://www.youtubekids.com/search?q=$word"));
+      break;
     default:
   }
 }

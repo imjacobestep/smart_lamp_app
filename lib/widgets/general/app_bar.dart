@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:smart_lamp/assets/theme.dart';
 import 'package:smart_lamp/utilities.dart';
 
-PreferredSizeWidget appBar(Widget left, String title, Widget right) {
+PreferredSizeWidget appBar(
+    Widget left, String title, Color titleColor, Widget right) {
   return AppBar(
       toolbarHeight: 80,
       centerTitle: true,
@@ -39,58 +40,20 @@ Widget pageTitle(String title) {
 }
 
 Widget headerBack(BuildContext context) {
-  return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          foregroundColor: dark,
-          backgroundColor: surface,
-          shape: const CircleBorder()),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-      child: const SizedBox(
-        height: 50,
-        width: 50,
-        child: Icon(
-          Icons.arrow_back,
-          size: 30,
-        ),
-      ));
+  return headerButton(Icons.arrow_back_outlined, surface, dark, () {
+    Navigator.pop(context);
+  }, context);
 }
 
-Widget headerSpeak(String word) {
-  return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          foregroundColor: dark,
-          backgroundColor: surface,
-          shape: const CircleBorder()),
-      onPressed: () {
-        speakContent(word);
-      },
-      child: const SizedBox(
-        height: 50,
-        width: 50,
-        child: Icon(
-          Icons.volume_up_outlined,
-          size: 30,
-        ),
-      ));
+Widget headerSpeak(String word, BuildContext context) {
+  return headerButton(Icons.volume_up_outlined, surface, dark, () {
+    speakContent(word);
+  }, context);
 }
 
-Widget headerProfile() {
-  return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          foregroundColor: dark,
-          backgroundColor: canvas,
-          shape: const CircleBorder()),
-      onPressed: () {},
-      child: const SizedBox(
-        height: 50,
-        width: 50,
-        child: Icon(
-          Icons.account_circle_outlined,
-          size: 30,
-        ),
-      ));
+Widget headerProfile(BuildContext context) {
+  return headerButton(
+      Icons.account_circle_outlined, canvas, dark, () {}, context);
 }
 
 Widget headerLogo() {
@@ -99,4 +62,22 @@ Widget headerLogo() {
     height: 50,
     width: 50,
   );
+}
+
+Widget headerButton(IconData icon, Color backgroundColor, Color iconColor,
+    void Function() tapFunction, BuildContext context) {
+  return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          foregroundColor: iconColor,
+          backgroundColor: backgroundColor,
+          shape: const CircleBorder()),
+      onPressed: () => tapFunction,
+      child: SizedBox(
+        height: 50,
+        width: 50,
+        child: Icon(
+          icon,
+          size: 30,
+        ),
+      ));
 }

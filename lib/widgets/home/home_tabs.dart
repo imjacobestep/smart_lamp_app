@@ -9,9 +9,9 @@ Widget tabView(TabController controller, List<Widget> tabContent,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
+        const SizedBox(
           height: 100,
-          child: const Center(child: Text("Stuff")),
+          child: Center(child: Text("Stuff")),
         ),
         Image.asset("lib/assets/book.png"),
         Container(

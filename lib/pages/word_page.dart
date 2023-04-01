@@ -1,24 +1,15 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:dart_openai/openai.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_profile_picture/flutter_profile_picture.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:owlbot_dart/owlbot_dart.dart';
-import 'package:smart_lamp/models/ai.dart';
-import 'package:smart_lamp/keys.dart';
-import 'package:smart_lamp/pages/storybook.dart';
 import 'package:smart_lamp/models/proxy.dart';
-import 'package:smart_lamp/utilities.dart';
-import 'package:smart_lamp/widgets/navbar.dart';
-import 'package:smart_lamp/widgets/spacer.dart';
-import 'package:smart_lamp/widgets/word_media.dart';
-import 'package:smart_lamp/widgets/word_variant_card.dart';
-import 'package:text_to_speech/text_to_speech.dart';
-import 'package:smart_lamp/assets/theme.dart';
+import 'package:smart_lamp/pages/storytime_page.dart';
+import 'package:smart_lamp/widgets/general/navbar.dart';
+import 'package:smart_lamp/widgets/general/spacer.dart';
+import 'package:smart_lamp/widgets/word/word_media.dart';
 
+import '../assets/theme.dart';
 import '../models/word.dart';
-import '../widgets/app_bar.dart';
+import '../widgets/general/app_bar.dart';
 
 class WordPage extends StatefulWidget {
   @override
@@ -48,7 +39,7 @@ class WordPageState extends State<WordPage> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => Storybook(word: widget.word)));
+              builder: (context) => StoryTimePage(word: widget.word)));
     }, false));
     return fabBar(buttons, context);
   }
@@ -56,8 +47,8 @@ class WordPageState extends State<WordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(headerBack(context), widget.word.word!,
-          headerSpeak(widget.word.word!)),
+      appBar: appBar(headerBack(context), widget.word.word!, dark,
+          headerSpeak(widget.word.word!, context)),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
         child: wordMedia(widget.word),

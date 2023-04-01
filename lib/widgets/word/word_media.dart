@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:smart_lamp/assets/theme.dart';
-import 'package:smart_lamp/models/dictionary.dart';
-import 'package:smart_lamp/widgets/gpt_message.dart';
-import 'package:smart_lamp/widgets/spacer.dart';
-import 'package:smart_lamp/widgets/word_definitions.dart';
+import 'package:smart_lamp/widgets/chat/gpt_message.dart';
+import 'package:smart_lamp/widgets/word/word_definitions.dart';
 
-import '../models/word.dart';
+import '../../models/word.dart';
 
 Widget wordMedia(Word word) {
   return ListView(
     children: [
       mediaSection("Chat", gptMessage(word.word!)),
       mediaSection("Definitions", wordDefinitions(word.word!)),
-      SizedBox(
+      const SizedBox(
         height: 200,
       )
     ],

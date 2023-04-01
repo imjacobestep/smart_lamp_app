@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_lamp/assets/theme.dart';
 
-import '../models/word.dart';
-import '../pages/word_page.dart';
+import '../../models/word.dart';
+import '../../pages/word_page.dart';
 
 void toDetails(Word word, BuildContext context) {
   Navigator.push(

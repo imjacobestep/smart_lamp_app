@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:smart_lamp/assets/theme.dart';
 import 'package:smart_lamp/utilities.dart';
 
+import '../../pages/settings_page.dart';
+
 PreferredSizeWidget appBar(
     Widget left, String title, Color titleColor, Widget right) {
   return AppBar(
@@ -40,20 +42,31 @@ Widget pageTitle(String title) {
 }
 
 Widget headerBack(BuildContext context) {
-  return headerButton(Icons.arrow_back_outlined, surface, dark, () {
-    Navigator.pop(context);
-  }, context);
+  return ElevatedButton(
+      style: headerButtonStyle(surface, dark),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      child: headerButtonContent(Icons.arrow_back_outlined));
 }
 
 Widget headerSpeak(String word, BuildContext context) {
-  return headerButton(Icons.volume_up_outlined, surface, dark, () {
-    speakContent(word);
-  }, context);
+  return ElevatedButton(
+      style: headerButtonStyle(surface, dark),
+      onPressed: () {
+        speakContent(word);
+      },
+      child: headerButtonContent(Icons.volume_up_outlined));
 }
 
 Widget headerProfile(BuildContext context) {
-  return headerButton(
-      Icons.account_circle_outlined, canvas, dark, () {}, context);
+  return ElevatedButton(
+      style: headerButtonStyle(canvas, dark),
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => SettingsPage()));
+      },
+      child: headerButtonContent(Icons.account_circle_outlined));
 }
 
 Widget headerLogo() {
@@ -64,8 +77,26 @@ Widget headerLogo() {
   );
 }
 
+ButtonStyle headerButtonStyle(Color backgroundColor, Color iconColor) {
+  return ElevatedButton.styleFrom(
+      foregroundColor: iconColor,
+      backgroundColor: backgroundColor,
+      shape: const CircleBorder());
+}
+
+Widget headerButtonContent(IconData icon) {
+  return SizedBox(
+    height: 50,
+    width: 50,
+    child: Icon(
+      icon,
+      size: 30,
+    ),
+  );
+}
+
 Widget headerButton(IconData icon, Color backgroundColor, Color iconColor,
-    void Function() tapFunction, BuildContext context) {
+    void Function(BuildContext context) tapFunction, BuildContext context) {
   return ElevatedButton(
       style: ElevatedButton.styleFrom(
           foregroundColor: iconColor,

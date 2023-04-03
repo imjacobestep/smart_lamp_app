@@ -55,12 +55,13 @@ class StoryTimePageState extends State<StoryTimePage> {
     return Scaffold(
       backgroundColor: dark,
       appBar: appBar(
-        headerButton(Icons.close_outlined, dark, surface, () {
+        headerButton(Icons.close_outlined, dark, surface, (context) {
           Navigator.pop(context);
         }, context),
         "",
         surface,
-        headerButton(Icons.more_horiz_outlined, dark, surface, () {}, context),
+        headerButton(
+            Icons.more_horiz_outlined, dark, surface, (context) {}, context),
       ),
       body: bookWrapper(),
     );

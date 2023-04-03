@@ -31,7 +31,7 @@ Widget gptMessage(String word) {
           child: Padding(
         padding: const EdgeInsets.all(10),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          getProfilePic(word, false),
+          getProfilePic(word, true),
           getSpacer(10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

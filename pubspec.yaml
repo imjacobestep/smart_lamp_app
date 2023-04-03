@@ -56,6 +56,8 @@ dependencies:
   status_bar_control: ^3.2.1
   change_case: ^1.1.0
   google_fonts: ^4.0.3
+  shared_preferences: ^2.1.0
+  settings_ui: ^2.0.2
 
 dev_dependencies:
   flutter_test:

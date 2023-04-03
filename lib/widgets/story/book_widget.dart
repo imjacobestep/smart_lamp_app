@@ -6,9 +6,6 @@ import 'package:smart_lamp/models/ai.dart';
 import 'package:smart_lamp/models/story_book.dart';
 import 'package:smart_lamp/widgets/general/placeholder_text.dart';
 import 'package:smart_lamp/widgets/story/page_widget.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import '../../models/story_page.dart';
 
 Widget bookWidget(String word, dynamic pageController) {
   return FutureBuilder(

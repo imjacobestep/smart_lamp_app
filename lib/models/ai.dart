@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_lamp/models/store.dart';
 import 'package:smart_lamp/models/story_book.dart';
 import 'package:smart_lamp/models/story_page.dart';
+import '../../keys.dart';
 
 Future<String> generateMessage(String word) async {
   SharedPreferences prefs = await getPrefs();
@@ -29,6 +30,7 @@ Future<String> generateText(String engineering, String prompt) async {
 
 Future<String> generateTextResponse(
     List<OpenAIChatCompletionChoiceMessageModel> aiMessages) async {
+  OpenAI.apiKey = aiKey;
   OpenAIChatCompletionModel model = await OpenAI.instance.chat
       .create(model: "gpt-3.5-turbo", messages: aiMessages);
 
@@ -36,10 +38,11 @@ Future<String> generateTextResponse(
 }
 
 Future<String> generatePic(String prompt) async {
+  OpenAI.apiKey = aiKey;
   SharedPreferences prefs = await getPrefs();
   if (prefs.getBool("Use AI images")!) {
     final image = await OpenAI.instance.image
-        .create(prompt: prompt, n: 1, size: OpenAIImageSize.size256);
+        .create(prompt: prompt, n: 1, size: OpenAIImageSize.size512);
     return image.data.first.url;
   } else {
     return "https://images.unsplash.com/photo-1504600770771-fb03a6961d33?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=882&q=80";
@@ -78,7 +81,7 @@ Future<StoryBook> generateStory(String word) async {
 
       String url = await generatePic(
           "Show me an illustration for a children's storybook to accompany the text: $pageText");
-      pages.add(StoryPage(pageText.toSentenceCase(), url));
+      pages.add(StoryPage(pageText, url));
     }
   }
   print("//// STORY GENERATION COMPLETE ////");

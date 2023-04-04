@@ -11,7 +11,7 @@ Widget tabView(TabController controller, List<Widget> tabContent,
       children: [
         const SizedBox(
           height: 100,
-          child: Center(child: Text("Stuff")),
+          child: Center(child: Text("")),
         ),
         Image.asset("lib/assets/book.png"),
         Container(

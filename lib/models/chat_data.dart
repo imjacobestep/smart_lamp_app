@@ -6,7 +6,8 @@ class ChatData {
   static final messageList = [
     Message(
         id: "1",
-        message: "Testing... Testing...",
+        message:
+            "Hi there! This feature lets you talk to a word to learn more about it.",
         createdAt: DateTime.now(),
         sendBy: "0")
   ];

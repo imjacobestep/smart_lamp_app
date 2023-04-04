@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:change_case/change_case.dart';
+import 'package:chatview/chatview.dart';
 import 'package:dart_openai/openai.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_lamp/models/store.dart';
@@ -17,12 +18,19 @@ Future<String> generateMessage(String word) async {
 }
 
 Future<String> generateText(String engineering, String prompt) async {
-  OpenAIChatCompletionModel model =
-      await OpenAI.instance.chat.create(model: "gpt-3.5-turbo", messages: [
+  List<OpenAIChatCompletionChoiceMessageModel> aiMessages = [
     OpenAIChatCompletionChoiceMessageModel(
         role: 'system', content: engineering),
     OpenAIChatCompletionChoiceMessageModel(role: 'user', content: prompt)
-  ]);
+  ];
+
+  return await generateTextResponse(aiMessages);
+}
+
+Future<String> generateTextResponse(
+    List<OpenAIChatCompletionChoiceMessageModel> aiMessages) async {
+  OpenAIChatCompletionModel model = await OpenAI.instance.chat
+      .create(model: "gpt-3.5-turbo", messages: aiMessages);
 
   return model.choices.first.message.content;
 }
@@ -75,4 +83,22 @@ Future<StoryBook> generateStory(String word) async {
   }
   print("//// STORY GENERATION COMPLETE ////");
   return StoryBook(TitlePage(title, cover), pages);
+}
+
+List<OpenAIChatCompletionChoiceMessageModel> messagesToAI(
+    List<Message> messages, String word) {
+  List<OpenAIChatCompletionChoiceMessageModel> aiMessages = [
+    OpenAIChatCompletionChoiceMessageModel(
+        role: 'system',
+        content:
+            "I want you to pretend that you are the word '$word'. Explain yourself to me as if I were a small child learning about you for the first time. Your tone is friendly and playful and your responses are not longer than 30 words. You do not prompt further responses from me.")
+  ];
+  for (var message in messages) {
+    String role = (message.sendBy != "2") ? "user" : "system";
+
+    aiMessages.add(OpenAIChatCompletionChoiceMessageModel(
+        role: role, content: message.message));
+  }
+
+  return aiMessages;
 }

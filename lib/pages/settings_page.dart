@@ -24,6 +24,7 @@ class SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: canvas,
       appBar: appBar(headerBack(context), "Settings", dark, getSpacer(50)),
       body: Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),

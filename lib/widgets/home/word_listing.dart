@@ -21,9 +21,9 @@ Widget getBox(bool filled, Color color) {
   );
 }
 
-Widget learnedProgress(Word word) {
+Widget learnedProgress(Word word, bool vertical) {
   List<Widget> boxes = [];
-  Color color = (word.isLearned! == 4) ? surface : dark.withAlpha(150);
+  Color color = (word.isLearned! == 4) ? surface : dark;
   int numFilled = word.isLearned!;
   for (int i = 0; i < 4; i++) {
     if (numFilled > 0) {
@@ -34,6 +34,8 @@ Widget learnedProgress(Word word) {
     }
   }
   return Wrap(
+    direction: vertical ? Axis.vertical : Axis.horizontal,
+    verticalDirection: VerticalDirection.up,
     spacing: 6,
     children: boxes,
   );
@@ -59,7 +61,7 @@ Widget wordListing(Word word, BuildContext context) {
               word.word!,
               style: TextStyle(color: dark, fontSize: 20),
             ),
-            learnedProgress(word)
+            learnedProgress(word, false)
             // IconButton(
             //   onPressed: () => toDetails(word, context),
             //   icon: const Icon(Icons.chevron_right_sharp),

@@ -47,14 +47,15 @@ class WordPageState extends State<WordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: canvas,
       appBar: appBar(headerBack(context), widget.word.word!, dark,
           headerSpeak(widget.word.word!, context)),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-        child: wordMedia(widget.word),
+        child: wordMedia(widget.word, context),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: wordNav(),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: wordNav(),
     );
   }
 }

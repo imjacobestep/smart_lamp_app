@@ -142,20 +142,61 @@ Widget pageControls(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         // mainAxisSize: MainAxisSize.max,
         children: [
-          pageButton(Icons.arrow_back_outlined, () {
-            if (pageNumber != 1) {
-              pageController.currentState?.goToPage(pageNumber - 2);
-            }
-          }, false),
-          pageButton(Icons.volume_up_outlined, () {
-            speakContent(text);
-          }, true),
-          pageButton(Icons.arrow_forward_outlined, () {
-            if (pageNumber < totalPages) {
-              pageController.currentState?.goToPage(pageNumber + 1);
-            }
-          }, false)
+          // pageButton(Icons.arrow_back_outlined, () {
+          //   if (pageNumber != 1) {
+          //     pageController.currentState?.goToPage(pageNumber - 2);
+          //   }
+          // }, false),
+          // pageButton(Icons.volume_up_outlined, () {
+          //   speakContent(text);
+          // }, true),
+          // pageButton(Icons.arrow_forward_outlined, () {
+          //   if (pageNumber < totalPages) {
+          //     pageController.currentState?.goToPage(pageNumber + 1);
+          //   }
+          // }, false)
+          ElevatedButton(
+              onPressed: () {
+                if (pageNumber != 1) {
+                  pageController.currentState?.goToPage(pageNumber - 2);
+                }
+              },
+              style: pageButtonStyle(false),
+              child: pageButtonContent(Icons.arrow_back_outlined)),
+          ElevatedButton(
+              onPressed: () {
+                speakContent(text);
+              },
+              style: pageButtonStyle(true),
+              child: pageButtonContent(Icons.volume_up_outlined)),
+          ElevatedButton(
+              onPressed: () {
+                if (pageNumber < totalPages) {
+                  pageController.currentState?.goToPage(pageNumber);
+                }
+              },
+              style: pageButtonStyle(false),
+              child: pageButtonContent(Icons.arrow_forward_outlined))
         ]),
+  );
+}
+
+ButtonStyle pageButtonStyle(bool isPrimary) {
+  return ElevatedButton.styleFrom(
+      foregroundColor: isPrimary ? dark : surface,
+      backgroundColor: isPrimary ? surface : dark,
+      shape: CircleBorder(
+          side: BorderSide(width: isPrimary ? 0 : 2, color: surface)));
+}
+
+Widget pageButtonContent(IconData icon) {
+  return SizedBox(
+    height: 50,
+    width: 50,
+    child: Icon(
+      icon,
+      size: 30,
+    ),
   );
 }
 

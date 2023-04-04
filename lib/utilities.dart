@@ -16,12 +16,12 @@ Future<void> launchURL(url) async {
   }
 }
 
-Future<void> googleSearch(String word, String searchType) async {
+void googleSearch(String word, String searchType) {
   switch (searchType) {
-    case "standard":
+    case "general":
       launchURL(Uri.parse("https://www.google.com/search?q=$word"));
       break;
-    case "definition":
+    case "definitions":
       launchURL(Uri.parse("https://www.google.com/search?q=$word+definition"));
       break;
     case "images":

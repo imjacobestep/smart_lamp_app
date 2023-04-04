@@ -90,6 +90,7 @@ Widget headerButtonContent(IconData icon) {
     width: 50,
     child: Icon(
       icon,
+      color: dark,
       size: 30,
     ),
   );
